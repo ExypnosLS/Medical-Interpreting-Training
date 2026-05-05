@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Interpreting Training — Exypnos Language Solutions</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f6;color:#1a1a1a;min-height:100vh}
+
+  /* Header */
+  .site-header{background:#0A1E32;padding:0;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+  .header-inner{max-width:820px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .header-brand{display:flex;align-items:center;gap:12px}
+  .header-logo{width:38px;height:38px;border-radius:50%;background:#64A08C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.02em}
+  .header-name{font-size:15px;font-weight:600;color:#fff;line-height:1.2}
+  .header-sub{font-size:11px;color:#B9DDD1;margin-top:1px}
+  .header-score{font-size:12px;color:#B9DDD1;text-align:right}
+  .header-score strong{color:#fff;font-size:14px;display:block}
+
+  /* Layout */
+  .app{max-width:820px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+  /* Progress */
+  .progress-section{background:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;border:1px solid #e2ede9}
+  .progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+  .progress-label-text{font-size:13px;color:#3a6a5a;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .progress-label-pct{font-size:13px;color:#64A08C;font-weight:600}
+  .progress-bar-bg{background:#e2ede9;border-radius:999px;height:8px;overflow:hidden}
+  .progress-bar{height:8px;border-radius:999px;background:#64A08C;transition:width .5s ease}
+
+  /* Module nav */
+  .module-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.25rem}
+  .mod-btn{padding:10px 6px;font-size:11px;text-align:center;border:1px solid #d4e8e0;border-radius:10px;background:#fff;cursor:pointer;color:#3a6a5a;transition:all .2s;line-height:1.3;font-weight:500}
+  .mod-btn:hover{background:#e1f5ee;border-color:#64A08C}
+  .mod-btn.done{background:#e1f5ee;border-color:#5DCAA5;color:#085041}
+  .mod-btn.active{background:#0A1E32;border-color:#0A1E32;color:#fff}
+  .mod-tick{display:block;font-size:10px;margin-bottom:2px}
+
+  /* Cards */
+  .card{background:#fff;border:1px solid #e2ede9;border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+  .card-title{font-size:20px;font-weight:600;color:#0A1E32;margin-bottom:.25rem}
+  .card-sub{font-size:13px;color:#64A08C;margin-bottom:1.25rem;font-weight:500}
+
+  /* Badge */
+  .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 12px;border-radius:999px;background:#e1f5ee;color:#085041;margin-bottom:.85rem;letter-spacing:.04em;text-transform:uppercase}
+  .badge-protocol{background:#EEF7F4;color:#0A1E32}
+  .badge-advanced{background:#FAEEDA;color:#633806}
+  .badge-compliance{background:#EEF0FE;color:#3C3489}
+
+  /* Language toggle */
+  .lang-toggle{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+  .lang-btn{padding:6px 16px;font-size:12px;border:1px solid #c8ddd4;border-radius:999px;background:transparent;cursor:pointer;color:#3a6a5a;font-weight:500;transition:all .2s}
+  .lang-btn:hover{background:#e1f5ee}
+  .lang-btn.active{background:#0A1E32;border-color:#0A1E32;color:#fff}
+
+  /* Lessons */
+  .lesson-block{border-left:3px solid #64A08C;padding:.85rem 1.1rem;margin-bottom:1rem;background:#f4f9f7;border-radius:0 8px 8px 0}
+  .lesson-label{font-size:11px;font-weight:700;color:#0A1E32;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+  .lesson-text{font-size:14px;line-height:1.75;color:#1a1a1a}
+  .lesson-text-es{font-size:14px;line-height:1.75;color:#3a6a5a;font-style:italic;margin-top:.4rem;padding-top:.4rem;border-top:1px dashed #c8ddd4}
+
+  /* Terms */
+  .terms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:1.1rem 0}
+  .term-card{border:1px solid #e2ede9;border-radius:8px;padding:.65rem .9rem;background:#fff}
+  .term-en{font-size:13px;font-weight:600;color:#0A1E32}
+  .term-es{font-size:12px;color:#64A08C;margin-top:3px}
+  .terms-heading{font-size:12px;font-weight:700;color:#3a6a5a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;margin-top:.75rem}
+
+  /* Protocols */
+  .protocol-group{margin-bottom:1.5rem}
+  .protocol-title{font-size:14px;font-weight:600;color:#0A1E32;margin-bottom:.85rem;padding-bottom:.4rem;border-bottom:1px solid #e2ede9}
+  .protocol-step{display:flex;gap:12px;margin-bottom:.8rem;align-items:flex-start}
+  .step-num{width:28px;height:28px;border-radius:50%;background:#0A1E32;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-text{font-size:14px;line-height:1.65;color:#1a1a1a}
+  .step-es{font-size:13px;color:#3a6a5a;font-style:italic;margin-top:.25rem}
+
+  /* Quiz */
+  .quiz-section-title{font-size:16px;font-weight:600;color:#0A1E32;margin-bottom:1.1rem;padding-top:.25rem}
+  .quiz-item{margin-bottom:1.75rem}
+  .quiz-q{font-size:15px;font-weight:500;color:#0A1E32;margin-bottom:.85rem;line-height:1.55}
+  .quiz-q-num{font-size:12px;font-weight:700;color:#64A08C;display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+  .quiz-opt{width:100%;text-align:left;padding:.75rem 1.1rem;margin-bottom:.45rem;border:1px solid #d4e8e0;border-radius:10px;background:#fff;cursor:pointer;font-size:14px;color:#1a1a1a;transition:all .2s;line-height:1.5}
+  .quiz-opt:hover:not([disabled]){background:#f0f9f5;border-color:#64A08C}
+  .quiz-opt.correct{background:#e1f5ee;border-color:#5DCAA5;color:#085041;font-weight:500}
+  .quiz-opt.wrong{background:#fff0f0;border-color:#f09595;color:#791F1F}
+  .quiz-feedback{padding:.8rem 1.1rem;border-radius:8px;font-size:13px;margin-top:.35rem;line-height:1.6}
+  .feedback-correct{background:#e1f5ee;color:#085041;border-left:3px solid #5DCAA5}
+  .feedback-wrong{background:#fff0f0;color:#791F1F;border-left:3px solid #f09595}
+
+  /* Score */
+  .score-box{text-align:center;padding:1.5rem;border:1px solid #e2ede9;border-radius:12px;background:#f4f9f7;margin-bottom:1rem}
+  .score-num{font-size:52px;font-weight:700;color:#0A1E32;line-height:1}
+  .score-label{font-size:14px;color:#3a6a5a;margin-top:.5rem}
+  .score-pass{color:#085041;font-weight:600}
+  .score-fail{color:#791F1F;font-weight:600}
+
+  /* Warning */
+  .warning-box{background:#FAEEDA;border:1px solid #EF9F27;border-radius:8px;padding:.8rem 1.1rem;font-size:13px;color:#633806;margin-bottom:1rem;line-height:1.6}
+
+  /* Nav row */
+  .nav-row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:1.25rem;flex-wrap:wrap}
+  .btn-primary{padding:.65rem 1.4rem;background:#0A1E32;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;transition:opacity .2s}
+  .btn-primary:hover{opacity:.88}
+  .btn-secondary{padding:.65rem 1.4rem;background:#fff;color:#0A1E32;border:1px solid #c8ddd4;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500;transition:all .2s}
+  .btn-secondary:hover{background:#f0f9f5}
+  .btn-teal{padding:.65rem 1.4rem;background:#64A08C;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;transition:opacity .2s}
+  .btn-teal:hover{opacity:.88}
+
+  /* Name input */
+  .input-label{font-size:13px;color:#3a6a5a;font-weight:600;display:block;margin-bottom:.4rem}
+  .name-input{width:100%;padding:.7rem 1rem;border:1px solid #c8ddd4;border-radius:8px;font-size:16px;color:#0A1E32;background:#fff;margin-bottom:1rem;outline:none;transition:border .2s}
+  .name-input:focus{border-color:#64A08C}
+
+  /* Certificate */
+  .cert-page{background:#fff;border-radius:14px;padding:2.5rem 2rem;text-align:center;border:1px solid #e2ede9;margin-bottom:1.25rem}
+  .cert-outer{border:2.5px solid #64A08C;border-radius:12px;padding:2rem 1.75rem}
+  .cert-inner{border:1px solid #B9DDD1;border-radius:8px;padding:1.75rem 1.25rem}
+  .cert-logo{width:56px;height:56px;border-radius:50%;background:#64A08C;display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;font-size:18px;font-weight:700;color:#fff;letter-spacing:.02em}
+  .cert-org-name{font-size:11px;font-weight:700;letter-spacing:.14em;color:#64A08C;text-transform:uppercase;margin-bottom:.3rem}
+  .cert-main-title{font-size:24px;font-weight:700;color:#0A1E32;margin-bottom:.2rem}
+  .cert-course-name{font-size:13px;color:#3a6a5a;margin-bottom:1.5rem;font-weight:500}
+  .cert-presented{font-size:13px;color:#666;margin-bottom:.3rem}
+  .cert-name-line{font-size:28px;font-weight:700;color:#0A1E32;border-bottom:2px solid #64A08C;display:inline-block;padding-bottom:.3rem;margin-bottom:.85rem;min-width:220px;font-style:italic}
+  .cert-body-text{font-size:14px;color:#1a1a1a;margin-bottom:.2rem;line-height:1.6}
+  .cert-highlight{font-size:16px;font-weight:600;color:#0A1E32;margin:.2rem 0}
+  .cert-modules{font-size:12px;color:#3a6a5a;margin-bottom:1.5rem;line-height:1.6}
+  .cert-seals{display:flex;justify-content:space-around;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap}
+  .cert-seal{flex:1;min-width:120px;text-align:center}
+  .seal-line{border-top:1px solid #c8ddd4;margin-bottom:.4rem}
+  .seal-val{font-size:13px;font-weight:600;color:#0A1E32}
+  .seal-lbl{font-size:10px;color:#3a6a5a;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+  .cert-id-line{font-size:10px;color:#aaa;margin-top:1.25rem;word-break:break-all}
+
+  /* Cert corner decorations */
+  .cert-corner{position:absolute;width:20px;height:20px;border-color:#B9DDD1;border-style:solid}
+  .cert-tl{top:8px;left:8px;border-width:2px 0 0 2px}
+  .cert-tr{top:8px;right:8px;border-width:2px 2px 0 0}
+  .cert-bl{bottom:8px;left:8px;border-width:0 0 2px 2px}
+  .cert-br{bottom:8px;right:8px;border-width:0 2px 2px 0}
+
+  /* Print styles */
+  @media print{
+    body{background:#fff}
+    .site-header,.module-nav,.progress-section,.nav-row,.print-actions{display:none!important}
+    .app{padding:0;max-width:100%}
+    .cert-page{border:none;padding:1rem}
+    .card{display:none}
+    .cert-page{display:block!important}
+  }
+  @media(max-width:600px){
+    .module-nav{grid-template-columns:repeat(3,1fr)}
+    .cert-seals{flex-direction:column;align-items:center}
+    .cert-name-line{font-size:22px}
+    .cert-main-title{font-size:20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-logo">ELS</div>
+      <div>
+        <div class="header-name">Exypnos Language Solutions</div>
+        <div class="header-sub">Medical Interpreting Training &amp; Certification</div>
+      </div>
+    </div>
+    <div class="header-score">
+      <strong id="headerScore">0%</strong>
+      Overall score
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <div class="progress-section">
+    <div class="progress-label">
+      <span class="progress-label-text">Training Progress</span>
+      <span class="progress-label-pct" id="progressPct">0 of 5 modules complete</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  </div>
+
+  <div class="module-nav" id="modNav"></div>
+  <div id="appContent"></div>
+</div>
+
+<script>
+const MODULES=[
+  {
+    id:0,short:"Intro",title:"Introduction to Medical Interpreting",
+    subtitle:"Roles, ethics, and foundational principles",
+    badge:"Foundation",badgeClass:"",
+    lessons:[
+      {label:"Role of the medical interpreter / El rol del intérprete médico",
+       en:"A medical interpreter serves as a neutral linguistic and cultural bridge between healthcare providers and patients who have limited English proficiency (LEP). Your role is NOT to advise, editorialize, or interject personal opinions. You interpret everything accurately, completely, and impartially — this is both an ethical and legal obligation.",
+       es:"Un intérprete médico actúa como puente lingüístico y cultural neutral entre los proveedores de salud y los pacientes con dominio limitado del inglés (LEP). Su rol NO es aconsejar, editorar o dar opiniones personales. Usted interpreta todo con precisión, completitud e imparcialidad — esto es tanto una obligación ética como legal."},
+      {label:"Core ethical principles / Principios éticos fundamentales",
+       en:"1. Accuracy — Interpret everything said without omitting or adding information.\n2. Confidentiality — Never share patient information outside the interpreting context.\n3. Impartiality — Maintain neutrality; do not advocate for either party.\n4. Role boundaries — Refuse requests to act outside your interpreter role.\n5. Cultural competence — Communicate cultural nuances when they affect care.",
+       es:"1. Exactitud — Interprete todo lo dicho sin omitir ni añadir información.\n2. Confidencialidad — Nunca comparta información del paciente fuera del contexto.\n3. Imparcialidad — Mantenga neutralidad; no abogue por ninguna parte.\n4. Límites de rol — Rechace solicitudes fuera de su rol como intérprete.\n5. Competencia cultural — Comunique matices culturales cuando afecten la atención."},
+      {label:"Modes of interpretation / Modos de interpretación",
+       en:"Consecutive interpreting: The speaker pauses while you interpret. Used in most medical visits.\nSimultaneous interpreting: You interpret in real time as the speaker talks. Used rarely in medical settings.\nSight translation: You translate a written document aloud. Used for consent forms, discharge instructions.",
+       es:"Interpretación consecutiva: El hablante hace pausa mientras usted interpreta. Se usa en la mayoría de las visitas médicas.\nInterpretación simultánea: Interpreta en tiempo real mientras el hablante habla. Se usa raramente.\nTraducción a la vista: Traduce un documento escrito en voz alta. Se usa para formularios de consentimiento e instrucciones de alta."}
+    ],
+    terms:[
+      {en:"Medical interpreter",es:"Intérprete médico"},{en:"Consecutive mode",es:"Modo consecutivo"},
+      {en:"Confidentiality",es:"Confidencialidad"},{en:"Impartiality",es:"Imparcialidad"},
+      {en:"Cultural competence",es:"Competencia cultural"},{en:"Sight translation",es:"Traducción a la vista"}
+    ],
+    quiz:[
+      {q:"Which of the following is OUTSIDE the interpreter's role?",opts:["Interpreting the doctor's instructions accurately","Advising the patient on which treatment to choose","Alerting the provider to a cultural misunderstanding","Maintaining confidentiality"],ans:1,
+       fb:"Interpreters must remain neutral and never advise patients on treatment choices. That is the physician's role. Your job is to render the message faithfully."},
+      {q:"Which interpreting mode is most commonly used in medical visits?",opts:["Simultaneous","Sight translation","Consecutive","Phone interpretation"],ans:2,
+       fb:"Consecutive interpreting — where the speaker pauses for you to interpret — is the standard mode for most medical encounters. It allows for accuracy and clarification."},
+      {q:"¿Qué debe hacer si un médico le pide que explique algo 'con sus propias palabras'?",opts:["Parafrasear según su criterio","Rechazar amablemente y explicar su rol","Preguntar al paciente su opinión","Omitir esa parte del mensaje"],ans:1,
+       fb:"Correct. As an interpreter you must faithfully render what is said, not paraphrase or simplify. Politely explain your professional role boundaries and ask the provider to rephrase if needed."}
+    ]
+  },
+  {
+    id:1,short:"Medical Vocab",title:"Medical Terminology & Vocabulary",
+    subtitle:"Essential bilingual clinical terminology",
+    badge:"Vocabulary",badgeClass:"",
+    lessons:[
+      {label:"Body systems / Sistemas del cuerpo",
+       en:"Interpreters must know terminology across all major body systems: cardiovascular (heart/blood vessels), respiratory (lungs/airways), gastrointestinal (stomach/intestines), musculoskeletal (bones/muscles), neurological (brain/nerves), endocrine (hormones/glands), and urogenital (kidneys/reproductive organs).",
+       es:"Los intérpretes deben conocer terminología de todos los sistemas corporales: cardiovascular (corazón/vasos sanguíneos), respiratorio (pulmones/vías respiratorias), gastrointestinal (estómago/intestinos), musculoesquelético (huesos/músculos), neurológico (cerebro/nervios), endocrino (hormonas/glándulas) y urogenital (riñones/órganos reproductivos)."},
+      {label:"Common diagnoses / Diagnósticos comunes",
+       en:"You will frequently encounter: hypertension (high blood pressure), diabetes mellitus, myocardial infarction (heart attack), cerebrovascular accident/stroke, pneumonia, urinary tract infection (UTI), appendicitis, fracture, laceration, and sepsis. Learn both the clinical and plain-language equivalents in both languages.",
+       es:"Con frecuencia encontrará: hipertensión (presión alta), diabetes mellitus, infarto al miocardio (ataque al corazón), accidente cerebrovascular (derrame), neumonía, infección de vías urinarias (IVU), apendicitis, fractura, laceración y sepsis. Aprenda los equivalentes clínicos y de lenguaje simple en ambos idiomas."},
+      {label:"Medications & procedures / Medicamentos y procedimientos",
+       en:"Key medication categories: analgesics (pain relievers), antibiotics, anticoagulants (blood thinners), antihypertensives, insulin, bronchodilators. Common procedures: blood draw (venipuncture), IV placement, imaging (X-ray, MRI, CT scan), biopsy, intubation, catheterization, and suturing.",
+       es:"Categorías de medicamentos: analgésicos, antibióticos, anticoagulantes, antihipertensivos, insulina, broncodilatadores. Procedimientos comunes: extracción de sangre (venopunción), colocación de IV, imágenes (radiografía, resonancia magnética, tomografía), biopsia, intubación, cateterización y sutura."}
+    ],
+    terms:[
+      {en:"Hypertension",es:"Hipertensión"},{en:"Myocardial infarction",es:"Infarto al miocardio"},
+      {en:"Laceration",es:"Laceración"},{en:"Anticoagulant",es:"Anticoagulante"},
+      {en:"Biopsy",es:"Biopsia"},{en:"Intubation",es:"Intubación"},
+      {en:"Urinary tract infection",es:"Infección de vías urinarias"},{en:"Stroke / CVA",es:"Accidente cerebrovascular"}
+    ],
+    quiz:[
+      {q:"What is the correct Spanish term for 'blood thinner' (anticoagulant)?",opts:["Analgésico","Antibiótico","Anticoagulante","Antihipertensivo"],ans:2,
+       fb:"Anticoagulante is correct. Anticoagulants prevent or reduce blood clotting. Common examples include warfarin and heparin."},
+      {q:"'Accidente cerebrovascular' refers to which condition in English?",opts:["Heart attack","Stroke","Seizure","Concussion"],ans:1,
+       fb:"Accidente cerebrovascular = stroke (CVA — cerebrovascular accident). This is a critical term to know in emergency settings."},
+      {q:"A patient says 'me duele mucho aquí' pointing to their chest. What is the most accurate interpretation?",opts:["'The patient feels sick'","'It hurts a lot here'","'I feel pain in my heart'","'I have chest problems'"],ans:1,
+       fb:"Accurate interpretation means rendering exactly what was said: 'It hurts a lot here.' You must not add clinical interpretation or assume what is causing the pain."}
+    ]
+  },
+  {
+    id:2,short:"Protocols",title:"Clinical Protocols & Procedures",
+    subtitle:"Step-by-step protocols for medical settings",
+    badge:"Protocol",badgeClass:"badge-protocol",
+    protocols:[
+      {title:"Pre-session briefing / Instrucciones previas a la sesión",steps:[
+        {en:"Introduce yourself to the provider before the session begins.",es:"Preséntese al proveedor antes de que comience la sesión."},
+        {en:"Confirm the patient's full name and preferred language or dialect.",es:"Confirme el nombre completo del paciente y su idioma o dialecto preferido."},
+        {en:"Ask the provider about the purpose of the visit and any sensitive topics to anticipate.",es:"Pregunte al proveedor sobre el propósito de la visita y temas sensibles que anticipar."},
+        {en:"Position yourself so all parties can see and hear you clearly.",es:"Ubíquese de modo que todas las partes puedan verle y escucharle claramente."},
+        {en:"Remind the provider to speak in short segments and address the patient directly.",es:"Recuerde al proveedor hablar en segmentos cortos y dirigirse directamente al paciente."}
+      ]},
+      {title:"Active session protocol / Protocolo durante la sesión activa",steps:[
+        {en:"Use first-person interpreting: say 'I have pain' not 'He says he has pain'.",es:"Use interpretación en primera persona: diga 'Tengo dolor', no 'Dice que tiene dolor'."},
+        {en:"If you miss something, say 'May I ask the speaker to repeat?' — never guess.",es:"Si pierde algo, diga '¿Puedo pedir al hablante que repita?' — nunca adivine."},
+        {en:"Alert parties to cultural factors with: 'Interpreter's note…' then interpret the cultural context.",es:"Alerte a las partes sobre factores culturales con: 'Nota del intérprete…' y luego interprete el contexto."},
+        {en:"Do not omit, soften, or embellish any message, including profanity or distressing content.",es:"No omita, suavice ni embellezca ningún mensaje, incluyendo groserías o contenido angustiante."}
+      ]},
+      {title:"Informed consent / Protocolo de consentimiento informado",steps:[
+        {en:"Translate the full consent form aloud (sight translation), maintaining all details and accuracy.",es:"Traduzca el formulario de consentimiento completo en voz alta, manteniendo todos los detalles."},
+        {en:"Pause after each section to allow the patient to ask questions.",es:"Haga pausa después de cada sección para permitir preguntas del paciente."},
+        {en:"If the patient does not understand, alert the provider — do not simplify the text on your own.",es:"Si el paciente no comprende, informe al proveedor — no simplifique el texto por su cuenta."},
+        {en:"Never sign as a witness on a consent form that you interpreted.",es:"Nunca firme como testigo en un formulario de consentimiento que usted interpretó."}
+      ]}
+    ],
+    quiz:[
+      {q:"You are interpreting and the doctor uses a medical term you don't know. What do you do?",opts:["Skip it and continue","Make your best guess at the meaning","Ask the doctor to clarify, then interpret accurately","Use a vague similar word"],ans:2,
+       fb:"Always ask for clarification rather than guessing. You can say: 'Interpreter's note — may I ask the speaker to clarify that term?' Then interpret accurately once clarified."},
+      {q:"A patient verbally consents but seems confused about the procedure. As the interpreter, you should:",opts:["Sign the consent form on their behalf","Flag the confusion to the provider","Explain the procedure yourself","Proceed — verbal consent is sufficient"],ans:1,
+       fb:"Alert the provider. Assessing patient capacity is not your role, but flagging observable confusion protects the patient and enables the provider to respond appropriately."},
+      {q:"First-person interpreting means:",opts:["Speaking only on behalf of the doctor","Saying 'she says that…' before each statement","Using 'I' as if you are the speaker","Interpreting your own opinions when relevant"],ans:2,
+       fb:"First-person interpreting means rendering statements as if you are the speaker. Say 'I have a headache,' not 'The patient says they have a headache.' This keeps communication direct and natural."}
+    ]
+  },
+  {
+    id:3,short:"Sensitive",title:"Sensitive Situations & Mental Health",
+    subtitle:"Trauma-informed interpreting and crisis protocols",
+    badge:"Advanced",badgeClass:"badge-advanced",
+    lessons:[
+      {label:"Trauma-informed interpreting / Interpretación con enfoque en trauma",
+       en:"Patients may be survivors of trauma, violence, or displacement. Trauma-informed interpreting means: maintaining a calm, neutral tone; never expressing shock or judgment; pausing if the patient becomes overwhelmed; and self-monitoring for vicarious trauma after difficult sessions. Do not make physical contact or offer personal comfort.",
+       es:"Los pacientes pueden ser sobrevivientes de trauma, violencia o desplazamiento. La interpretación con enfoque en trauma significa: mantener un tono calmado y neutral; nunca expresar sorpresa ni juicio; hacer pausa si el paciente se abruma; y automonitorear el trauma vicario después de sesiones difíciles. No haga contacto físico ni ofrezca consuelo personal."},
+      {label:"Mental health terminology / Terminología de salud mental",
+       en:"Key terms you must know: depression (depresión), anxiety disorder (trastorno de ansiedad), post-traumatic stress disorder — PTSD (trastorno de estrés postraumático — TEPT), psychosis (psicosis), suicidal ideation (ideación suicida), hallucinations (alucinaciones), cognitive impairment (deterioro cognitivo), dissociation (disociación).",
+       es:"Términos clave que debe conocer: depresión, trastorno de ansiedad, trastorno de estrés postraumático (TEPT), psicosis, ideación suicida, alucinaciones, deterioro cognitivo, disociación."},
+      {label:"Crisis & emergency interpreting / Interpretación en crisis y emergencias",
+       en:"In emergencies: prioritize safety-critical information first. Interpret clearly and quickly. If a patient expresses suicidal ideation or intent to harm, interpret it immediately and completely — do not soften or delay the message. After difficult sessions, debrief with a supervisor and practice self-care. You are not responsible for the clinical outcome, only for accurate communication.",
+       es:"En emergencias: priorice información de seguridad. Interprete clara y rápidamente. Si un paciente expresa ideación suicida o intención de daño, interprételo inmediata y completamente — no suavice ni retrase el mensaje. Después de sesiones difíciles, hable con un supervisor y practique el autocuidado."}
+    ],
+    terms:[
+      {en:"PTSD",es:"TEPT — Trastorno de estrés postraumático"},{en:"Suicidal ideation",es:"Ideación suicida"},
+      {en:"Vicarious trauma",es:"Trauma vicario"},{en:"Anxiety disorder",es:"Trastorno de ansiedad"},
+      {en:"Psychosis",es:"Psicosis"},{en:"Cognitive impairment",es:"Deterioro cognitivo"},
+      {en:"Dissociation",es:"Disociación"},{en:"Hallucinations",es:"Alucinaciones"}
+    ],
+    quiz:[
+      {q:"A patient discloses suicidal thoughts during your interpreting session. You should:",opts:["Soften the message to avoid alarming the provider","Interpret the disclosure accurately and immediately","Wait until after the session to inform the provider","Ask the patient if they are certain about their feelings"],ans:1,
+       fb:"Safety-critical disclosures must be interpreted accurately and immediately. Never omit or soften information that could affect patient safety. This is both an ethical and legal obligation."},
+      {q:"'Vicarious trauma' in interpreting refers to:",opts:["A patient's documented trauma history","Trauma experienced by interpreters through repeated exposure to difficult content","Trauma caused by medical errors during a session","Cultural trauma experienced by immigrant communities"],ans:1,
+       fb:"Vicarious trauma is real and affects interpreters who regularly work with trauma survivors. Symptoms include exhaustion, anxiety, and emotional numbness. Debriefing and self-care are essential protective practices."},
+      {q:"When a patient becomes overwhelmed during a session, the trauma-informed interpreter should:",opts:["Continue interpreting at the same pace to minimize disruption","Ask the patient personal questions about their history","Maintain a calm tone and allow a natural pause","Express personal sympathy and share similar experiences"],ans:2,
+       fb:"Remaining calm and allowing a natural pause supports the patient without stepping outside your interpreter role. You can also let the provider know the patient may need a moment."}
+    ]
+  },
+  {
+    id:4,short:"Legal & Ethics",title:"Legal Frameworks & Professional Ethics",
+    subtitle:"HIPAA, Title VI, NCIHC, and professional standards",
+    badge:"Compliance",badgeClass:"badge-compliance",
+    lessons:[
+      {label:"Legal requirements / Requisitos legales",
+       en:"Title VI of the Civil Rights Act (1964) requires healthcare facilities receiving federal funding to provide meaningful access to LEP (Limited English Proficiency) patients — including qualified medical interpreters. HIPAA (Health Insurance Portability and Accountability Act) governs patient privacy. As an interpreter, you are a covered entity's business associate and must protect all PHI (Protected Health Information).",
+       es:"El Título VI de la Ley de Derechos Civiles (1964) requiere que las instituciones de salud que reciben fondos federales provean acceso significativo a pacientes con dominio limitado del inglés (LEP). HIPAA rige la privacidad del paciente. Como intérprete, usted es un asociado comercial de la entidad cubierta y debe proteger toda la IPS (Información Protegida de Salud)."},
+      {label:"Professional standards / Estándares profesionales",
+       en:"The National Code of Ethics for Interpreters in Health Care (NCIHC) and the International Medical Interpreters Association (IMIA) Code of Ethics define the professional standards for medical interpreters. Key standards include: accuracy, confidentiality, impartiality, respect for all persons, ongoing professional development, and strict adherence to scope of practice.",
+       es:"El Código Nacional de Ética para Intérpretes en Salud (NCIHC) y el Código de Ética de la IMIA definen los estándares profesionales. Estándares clave: exactitud, confidencialidad, imparcialidad, respeto a todas las personas, desarrollo profesional continuo y cumplimiento estricto del alcance de práctica."},
+      {label:"Documentation & reporting / Documentación e informes",
+       en:"Document each interpreting session: date, provider name, patient MRN (do not write patient name on external forms), duration, modality (in-person/phone/video), and any unusual incidents such as patient distress or requests to go outside your role. Report ethical violations through proper channels — never directly confront a provider during a live session.",
+       es:"Documente cada sesión: fecha, nombre del proveedor, número de historia del paciente (no escriba el nombre en formularios externos), duración, modalidad (presencial/teléfono/video) e incidentes inusuales. Reporte violaciones éticas por los canales apropiados — nunca confronte directamente a un proveedor durante una sesión activa."}
+    ],
+    terms:[
+      {en:"Title VI — Civil Rights Act",es:"Título VI — Ley de Derechos Civiles"},{en:"HIPAA",es:"HIPAA"},
+      {en:"PHI — Protected Health Information",es:"IPS — Información Protegida de Salud"},
+      {en:"LEP — Limited English Proficiency",es:"LEP — Dominio Limitado del Inglés"},
+      {en:"NCIHC",es:"NCIHC"},{en:"Scope of practice",es:"Alcance de práctica"}
+    ],
+    quiz:[
+      {q:"Under Title VI, healthcare facilities that receive federal funding must:",opts:["Hire only nationally certified interpreters","Provide meaningful language access to all LEP patients","Offer full written translation of every document","Allow trained family members to interpret"],ans:1,
+       fb:"Title VI requires meaningful access for LEP individuals — which includes providing qualified medical interpreters. Family members, even if bilingual, should generally not interpret in clinical settings due to confidentiality and accuracy concerns."},
+      {q:"HIPAA applies to medical interpreters because:",opts:["They are licensed medical professionals","They are business associates who access Protected Health Information","They are funded by federal programs","They work exclusively inside accredited hospitals"],ans:1,
+       fb:"Medical interpreters who handle PHI are considered business associates under HIPAA and must follow the same privacy and confidentiality standards as healthcare providers."},
+      {q:"A provider asks you to tell the patient to 'just sign' without fully interpreting the consent form. You should:",opts:["Comply — the provider has authority over the session","Refuse and explain your professional obligation to interpret fully","Sign it yourself to expedite the process","Skip the form and address it after the appointment"],ans:1,
+       fb:"You are professionally and legally obligated to interpret all content completely and accurately. Refusing an improper request while calmly explaining your role is the correct response and protects both the patient and the provider."}
+    ]
+  }
+];
+
+let currentModule=0,lang='en',quizState={},modulesDone={},finalScore=0;
+
+function getDate(){return new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}
+function genId(){return'ELS-MED-'+Date.now().toString(36).toUpperCase().slice(-8);}
+
+function calcOverallScore(){
+  let right=0,total=0;
+  MODULES.forEach((m,i)=>{const qs=quizState[i]||{answers:{}};m.quiz.forEach((q,qi)=>{total++;if(qs.answers[qi]===q.ans)right++;});});
+  return total?Math.round((right/total)*100):0;
+}
+
+function updateProgress(){
+  const done=Object.keys(modulesDone).length;
+  document.getElementById('progressBar').style.width=Math.round((done/MODULES.length)*100)+'%';
+  document.getElementById('progressPct').textContent=done+' of '+MODULES.length+' modules complete';
+  document.getElementById('headerScore').textContent=calcOverallScore()+'%';
+}
+
+function renderNav(){
+  document.getElementById('modNav').innerHTML=MODULES.map(m=>{
+    const done=modulesDone[m.id],active=m.id===currentModule;
+    return`<button class="mod-btn${active?' active':''}${done&&!active?' done':''}" onclick="gotoModule(${m.id})">`+(done&&!active?'<span class="mod-tick">✓</span>':'')+m.short+'</button>';
+  }).join('');
+}
+
+function gotoModule(id){
+  currentModule=id;
+  if(!quizState[id])quizState[id]={answers:{}};
+  renderNav();renderModule();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderModule(){
+  const m=MODULES[currentModule];
+  const qs=quizState[currentModule]||{answers:{}};
+  const allAnswered=m.quiz.every((_,i)=>qs.answers[i]!==undefined);
+  let score=0;
+  if(allAnswered) score=m.quiz.filter((_,i)=>qs.answers[i]===m.quiz[i].ans).length;
+  const pct=allAnswered?Math.round((score/m.quiz.length)*100):0;
+  const allDone=MODULES.every(x=>modulesDone[x.id]);
+
+  let html=`<div class="card">
+    <span class="badge ${m.badgeClass}">${m.badge}</span>
+    <div class="card-title">${m.title}</div>
+    <div class="card-sub">${m.subtitle}</div>
+    <div class="lang-toggle">
+      <button class="lang-btn${lang==='en'?' active':''}" onclick="setLang('en')">English</button>
+      <button class="lang-btn${lang==='es'?' active':''}" onclick="setLang('es')">Español</button>
+      <button class="lang-btn${lang==='both'?' active':''}" onclick="setLang('both')">Both / Ambos</button>
+    </div>`;
+
+  if(m.lessons){
+    m.lessons.forEach(l=>{
+      html+=`<div class="lesson-block"><div class="lesson-label">${l.label}</div>`;
+      if(lang!=='es') html+=`<div class="lesson-text">${l.en.replace(/\n/g,'<br>')}</div>`;
+      if(lang!=='en') html+=`<div class="lesson-text-es">${l.es.replace(/\n/g,'<br>')}</div>`;
+      html+='</div>';
+    });
+  }
+
+  if(m.protocols){
+    m.protocols.forEach(p=>{
+      html+=`<div class="protocol-group"><div class="protocol-title">${p.title}</div>`;
+      p.steps.forEach((s,i)=>{
+        html+=`<div class="protocol-step"><div class="step-num">${i+1}</div><div>`;
+        if(lang!=='es') html+=`<div class="step-text">${s.en}</div>`;
+        if(lang!=='en') html+=`<div class="step-es">${s.es}</div>`;
+        html+='</div></div>';
+      });
+      html+='</div>';
+    });
+  }
+
+  if(m.terms){
+    html+=`<div class="terms-heading">Key terms / Términos clave</div><div class="terms-grid">`;
+    m.terms.forEach(t=>{html+=`<div class="term-card"><div class="term-en">${t.en}</div><div class="term-es">${t.es}</div></div>`;});
+    html+='</div>';
+  }
+
+  html+=`</div><div class="card"><div class="quiz-section-title">Module quiz</div>`;
+  m.quiz.forEach((q,qi)=>{
+    const answered=qs.answers[qi]!==undefined;
+    html+=`<div class="quiz-item"><div class="quiz-q"><span class="quiz-q-num">Question ${qi+1}</span>${q.q}</div>`;
+    q.opts.forEach((opt,oi)=>{
+      let cls='quiz-opt';
+      if(answered){
+        if(oi===q.ans)cls+=' correct';
+        else if(oi===qs.answers[qi]&&qs.answers[qi]!==q.ans)cls+=' wrong';
+      }
+      html+=`<button class="${cls}" onclick="answerQ(${currentModule},${qi},${oi})"${answered?' disabled':''}>${opt}</button>`;
+    });
+    if(answered){
+      const ok=qs.answers[qi]===q.ans;
+      html+=`<div class="quiz-feedback ${ok?'feedback-correct':'feedback-wrong'}">${ok?'Correct — ':'Incorrect — '}${q.fb}</div>`;
+    }
+    html+='</div>';
+  });
+
+  if(allAnswered){
+    if(pct>=67) modulesDone[currentModule]=true;
+    html+=`<div class="score-box"><div class="score-num">${pct}%</div>
+      <div class="score-label ${pct>=67?'score-pass':'score-fail'}">${score} of ${m.quiz.length} correct — ${pct>=67?'Module passed ✓':'Did not pass — review and retry'}</div></div>`;
+    if(pct<67){
+      html+=`<div class="warning-box">You need at least 67% to pass this module. Please review the material above and try again.</div>
+        <button class="btn-teal" onclick="retryModule()">Retry quiz</button>`;
+    }
+  }
+
+  html+=`<div class="nav-row">
+    ${currentModule>0?`<button class="btn-secondary" onclick="gotoModule(${currentModule-1})">← Previous</button>`:'<span></span>'}
+    ${currentModule<MODULES.length-1
+      ?`<button class="btn-primary" onclick="gotoModule(${currentModule+1})">Next module →</button>`
+      :(allDone
+        ?`<button class="btn-primary" onclick="showCertForm()">Get your certificate →</button>`
+        :`<span style="font-size:13px;color:#3a6a5a">Complete all modules to unlock your certificate</span>`)}
+  </div></div>`;
+
+  document.getElementById('appContent').innerHTML=html;
+  updateProgress();renderNav();
+}
+
+function setLang(l){lang=l;renderModule();}
+
+function answerQ(mid,qi,oi){
+  if(!quizState[mid])quizState[mid]={answers:{}};
+  quizState[mid].answers[qi]=oi;
+  renderModule();
+}
+
+function retryModule(){
+  quizState[currentModule]={answers:{}};
+  renderModule();
+}
+
+function showCertForm(){
+  finalScore=calcOverallScore();
+  document.getElementById('appContent').innerHTML=`
+  <div class="card">
+    <span class="badge">Certificate</span>
+    <div class="card-title">Generate your certificate</div>
+    <div class="card-sub" style="margin-bottom:1.25rem">
+      You have completed all 5 modules with an overall score of <strong style="color:#0A1E32">${finalScore}%</strong>. 
+      Enter your full name exactly as you want it to appear on your certificate.
+    </div>
+    <label class="input-label" for="certName">Full legal name</label>
+    <input class="name-input" type="text" id="certName" placeholder="e.g. María González" 
+      oninput="document.getElementById('genBtn').disabled=this.value.trim().length<2">
+    <button class="btn-primary" id="genBtn" disabled onclick="generateCert()">Generate certificate →</button>
+  </div>`;
+}
+
+function generateCert(){
+  const name=document.getElementById('certName').value.trim();
+  if(!name)return;
+  const certId=genId();
+  const dateStr=getDate();
+  document.getElementById('appContent').innerHTML=`
+  <div class="cert-page" id="certPage">
+    <div class="cert-outer" style="position:relative">
+      <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+      <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+      <div class="cert-inner">
+        <div class="cert-logo">ELS</div>
+        <div class="cert-org-name">Exypnos Language Solutions</div>
+        <div class="cert-main-title">Certificate of Completion</div>
+        <div class="cert-course-name">Medical Interpreting Training &amp; Protocols Program — EN/ES</div>
+        <div class="cert-presented">This certifies that</div>
+        <div class="cert-name-line">${name}</div>
+        <div class="cert-body-text">has successfully completed the</div>
+        <div class="cert-highlight">Basic Medical Interpreting Training &amp; Protocols</div>
+        <div class="cert-modules">
+          Module 1: Introduction to Medical Interpreting &nbsp;·&nbsp; Module 2: Medical Terminology &amp; Vocabulary<br>
+          Module 3: Clinical Protocols &amp; Procedures &nbsp;·&nbsp; Module 4: Sensitive Situations &amp; Mental Health<br>
+          Module 5: Legal Frameworks &amp; Professional Ethics
+        </div>
+        <div class="cert-body-text" style="margin-bottom:.2rem">Bilingual Training: English – Spanish &nbsp;|&nbsp; Overall Score: <strong>${finalScore}%</strong></div>
+        <div class="cert-seals">
+          <div class="cert-seal">
+            <div class="seal-line"></div>
+            <div class="seal-val">Exypnos Language Solutions</div>
+            <div class="seal-lbl">Issuing organization</div>
+          </div>
+          <div class="cert-seal">
+            <div class="seal-line"></div>
+            <div class="seal-val">${dateStr}</div>
+            <div class="seal-lbl">Date of completion</div>
+          </div>
+          <div class="cert-seal">
+            <div class="seal-line"></div>
+            <div class="seal-val">Program Director</div>
+            <div class="seal-lbl">Authorized signature</div>
+          </div>
+        </div>
+        <div class="cert-id-line">Certificate ID: ${certId} &nbsp;·&nbsp; Medical Interpreting — Bilingual EN/ES &nbsp;·&nbsp; Issued by Exypnos Language Solutions</div>
+      </div>
+    </div>
+  </div>
+  <div class="print-actions" style="display:flex;gap:10px;justify-content:center;margin-top:1rem;flex-wrap:wrap">
+    <button class="btn-primary" onclick="window.print()">Print / Save as PDF</button>
+    <button class="btn-secondary" onclick="gotoModule(0)">Review training</button>
+  </div>`;
+}
+
+MODULES.forEach(m=>{quizState[m.id]={answers:{}};});
+renderNav();gotoModule(0);
+</script>
+</body>
+</html>
